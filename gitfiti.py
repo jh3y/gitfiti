@@ -17,12 +17,12 @@ import urllib2
 import json
 
 TITLE = '''
-          _ __  _____ __  _ 
+          _ __  _____ __  _
    ____ _(_) /_/ __(_) /_(_)
-  / __ `/ / __/ /_/ / __/ / 
- / /_/ / / /_/ __/ / /_/ /  
- \__, /_/\__/_/ /_/\__/_/   
-/____/ 
+  / __ `/ / __/ /_/ / __/ /
+ / /_/ / / /_/ __/ / /_/ /
+ \__, /_/\__/_/ /_/\__/_/
+/____/
 '''
 
 KITTY = [
@@ -60,6 +60,15 @@ DACODEZ =[
 [0,0,4,2,4,4,2,4,4,2,4,0,0,0,0,0,4,4,4,0,4,4,4,0,4,4,4,4,0,4,4,4,0,0,0,4,0,0,0],
 [3,3,4,2,2,2,3,2,2,2,4,3,3,0,0,0,4,0,0,0,4,0,4,0,0,4,0,4,0,0,0,4,0,0,4,0,0,0,0],
 [2,2,4,2,2,2,2,2,2,2,4,2,2,0,0,0,4,4,4,0,4,4,4,0,4,4,4,4,0,4,4,4,0,4,4,4,4,4,0]]
+
+NEWCODEZ = [
+[0,0,4,4,0,0,0,0,0,0,0,4,4,0,4,4,4,0,4,4,4,0,4,4,4,4,0,0,0,0,4,4,4,4],
+[0,0,4,2,4,4,4,4,4,4,4,2,4,0,4,0,0,0,4,0,4,0,0,4,0,4,0,4,4,0,0,0,4,0],
+[0,0,4,2,2,2,2,2,2,2,2,2,4,0,4,4,4,0,4,4,4,0,4,4,4,4,0,0,4,0,0,4,0,0],
+[0,0,4,2,4,1,2,2,2,4,1,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,4,0,4,4,4,4],
+[4,4,4,2,4,4,2,4,2,4,4,2,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0],
+[0,0,4,3,2,2,4,2,4,2,2,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,4,0,0,0,0,0],
+[4,4,4,2,2,2,2,2,2,2,2,2,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
 
 ONEUP2 = [
 [0,0,4,4,4,4,4,4,4,0,0],
@@ -148,19 +157,20 @@ def str_to_sprite(content):
     return split_lines
 
 ONEUP_STR = str_to_sprite("""
- ******* 
+ *******
 *=~~-~~=*
 *~~---~~*
 *=*****=*
 **-*-*-**
- *-----* 
-  *****  
+ *-----*
+  *****
 """)
 
 IMAGES = {
 'kitty': KITTY,
 'oneup':ONEUP,
 'dacodez': DACODEZ,
+'newcodez': NEWCODEZ,
 'oneup2':ONEUP2,
 'hackerschool':HACKERSCHOOL,
 'octocat':OCTOCAT,
@@ -201,7 +211,7 @@ def load_images(img_names):
 def get_calendar(username, base_url='https://github.com/'):
     """retrieves the github commit calendar data for a username"""
     base_url = base_url + 'users/' + username
-    try:        
+    try:
         url = base_url + '/contributions'
         page = urllib2.urlopen(url)
     except (urllib2.HTTPError,urllib2.URLError) as e:
@@ -261,7 +271,7 @@ def commit(content, commitdate):
     template = ("""echo {0} >> gitfiti\n"""
     """GIT_AUTHOR_DATE={1} GIT_COMMITTER_DATE={2} """
     """git commit -a -m "gitfiti" > /dev/null\n""")
-    return template.format(content, commitdate.isoformat(), 
+    return template.format(content, commitdate.isoformat(),
             commitdate.isoformat())
 
 def fake_it(image, start_date, username, repo, offset=0, multiplier=1,
@@ -325,9 +335,9 @@ def main():
            'Any other input will cause the default matching behavior'
            ).format(max_commits(cal))
     match = raw_input(">")
-    if match == "gitfiti": 
+    if match == "gitfiti":
         match = m
-    else: 
+    else:
         match = 1
 
     print ('enter file(s) to load images from (blank if not applicable)')
@@ -340,9 +350,9 @@ def main():
     if image == None:
         image = IMAGES['kitty']
     else:
-        try: 
+        try:
             image = images[image]
-        except: 
+        except:
             image = IMAGES['kitty']
     if ghe is None or ghe == "":
         output = fake_it(image, get_start_date(), username, repo, offset,
